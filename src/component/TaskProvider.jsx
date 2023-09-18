@@ -1,21 +1,23 @@
 import { createContext, useContext, useReducer, useState } from "react";
 import PropTypes from "prop-types";
-
+// create three context task and dispatch and theme
 const TaskContext = createContext(null);
 const DispatchContext = createContext(null);
 const setThemeContext = createContext(null);
 
 export function TaskProvider({ children }) {
+  //the first letter of children *shouldn't* be capital
   const [theme, setTheme] = useState("light");
-  //the first letter shouldn't be capital
   const [task, dispatch] = useReducer(reducer, initialValue);
 
   return (
     <>
       <TaskContext.Provider value={task}>
         <DispatchContext.Provider value={dispatch}>
+          {/* if we want state and setter both we should define value like object */}
           <setThemeContext.Provider value={{ theme, setTheme }}>
-            <div data-theme={theme}>{children}</div>
+            {/* this div is for dark and light theme  with data-theme prop that its belong to daisy ui*/}
+            <div data-theme={theme} className="pb-10">{children}</div>
           </setThemeContext.Provider>
         </DispatchContext.Provider>
       </TaskContext.Provider>
@@ -48,7 +50,7 @@ function reducer(task, action) {
           text: action.text,
           id: action.id,
           done: false,
-          theme: "light",
+          
         },
       ];
     case "deleted":
@@ -68,9 +70,5 @@ function reducer(task, action) {
 const initialValue = [
   { id: 0, text: "attend to meeting", done: false },
   { id: 1, text: "coding the new project", done: false },
-  {
-    id: 2,
-    text: "watching better call saul series",
-    done: false,
-  },
+  { id: 2, text: "watching better call saul series", done: false, },
 ];

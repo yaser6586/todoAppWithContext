@@ -1,9 +1,7 @@
 import { useSetTheme } from "./TaskProvider";
-
+// this component would toggle between dark and light
 function DarkToggle() {
   const { theme, setTheme } = useSetTheme();
-  //   const theme = useTheme();
-  //   const [toggle, setToggle] = useState(false);
 
   return (
     <div className="flex justify-center">

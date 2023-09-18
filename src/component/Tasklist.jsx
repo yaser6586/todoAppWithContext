@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 function Tasklist() {
   const task = useTask();
   return (
-    <div className="flex justify-center pb-36">
+    <div className="flex justify-center ">
       <div className="overflow-x-auto m-auto max-w-7xl ">
         <table className="table">
           {/* head */}
@@ -20,6 +20,7 @@ function Tasklist() {
           </thead>
 
           <tbody>
+            {/* this map would generate the table contents by Task component */}
             {task.map((task) => (
               <Task key={task.id} task={task} />
             ))}
@@ -33,8 +34,9 @@ function Tasklist() {
 export default Tasklist;
 
 export function Task({ task }) {
+  // this state shows if we click edit button or not
   const [isEdit, setIsEdit] = useState(false);
-
+  //  this variable would change by click between edit and save button
   let content;
   const dispatch = useDispatch();
 
@@ -59,6 +61,7 @@ export function Task({ task }) {
             onChange={(e) =>
               dispatch({
                 type: "edited",
+                // it return completely a new task state  but done field is changed by user
                 task: { ...task, done: e.target.checked },
               })
             }
@@ -94,6 +97,7 @@ export function Task({ task }) {
             onChange={(e) => {
               dispatch({
                 type: "edited",
+                // it return completely a new task state  but text field is being changed by user
                 task: {
                   ...task,
                   text: e.target.value,
