@@ -1,10 +1,12 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useReducer, useState } from "react";
 import PropTypes from "prop-types";
 
 const TaskContext = createContext(null);
 const DispatchContext = createContext(null);
+const setThemeContext = createContext(null);
 
 export function TaskProvider({ children }) {
+  const [theme, setTheme] = useState("light");
   //the first letter shouldn't be capital
   const [task, dispatch] = useReducer(reducer, initialValue);
 
@@ -12,7 +14,9 @@ export function TaskProvider({ children }) {
     <>
       <TaskContext.Provider value={task}>
         <DispatchContext.Provider value={dispatch}>
-          {children}
+          <setThemeContext.Provider value={{ theme, setTheme }}>
+            <div data-theme={theme}>{children}</div>
+          </setThemeContext.Provider>
         </DispatchContext.Provider>
       </TaskContext.Provider>
     </>
@@ -30,6 +34,10 @@ export function useTask() {
 export function useDispatch() {
   return useContext(DispatchContext);
 }
+export function useSetTheme() {
+  return useContext(setThemeContext);
+}
+
 //define the reducer function
 function reducer(task, action) {
   switch (action.type) {
@@ -39,8 +47,20 @@ function reducer(task, action) {
         {
           text: action.text,
           id: action.id,
+          done: false,
+          theme: "light",
         },
       ];
+    case "deleted":
+      return task.filter((t) => t.id !== action.id);
+    case "edited":
+      return task.map((task) => {
+        if (task.id === action.task.id) {
+          return action.task;
+        } else {
+          return task;
+        }
+      });
   }
 }
 
@@ -48,5 +68,9 @@ function reducer(task, action) {
 const initialValue = [
   { id: 0, text: "attend to meeting", done: false },
   { id: 1, text: "coding the new project", done: false },
-  { id: 2, text: "watching better call saul series", done: false },
+  {
+    id: 2,
+    text: "watching better call saul series",
+    done: false,
+  },
 ];

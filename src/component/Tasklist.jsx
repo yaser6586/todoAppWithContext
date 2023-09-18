@@ -1,47 +1,123 @@
-import { useTask } from "./TaskProvider";
+import { useState } from "react";
+import { useTask, useDispatch } from "./TaskProvider";
+import PropTypes from "prop-types";
 
 function Tasklist() {
+  const task = useTask();
   return (
-    <div className="flex-col justify-center">
-      <Task />
+    <div className="flex justify-center pb-36">
+      <div className="overflow-x-auto m-auto max-w-7xl ">
+        <table className="table">
+          {/* head */}
+          <thead>
+            <tr>
+              <th></th>
+              <th>todo</th>
+              <th>done</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {task.map((task) => (
+              <Task key={task.id} task={task} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
 export default Tasklist;
 
-export function Task() {
-  const task = useTask();
-  // const dispatch = useDispatch();
+export function Task({ task }) {
+  const [isEdit, setIsEdit] = useState(false);
 
-  return (
-    <>
-      {task.map((task) => (
-        <div key={task.id} className="my-5 w-3/4 m-auto">
-          <div className="alert alert-info">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-current shrink-0 w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <div className="flex  justify-between ">
-              <div className="m-auto w-2/3">{task.text}</div>
-              <div className="">
-                <button class="btn btn-primary">Primary</button>
-                <button class="btn btn-error">Primary</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </>
-  );
+  let content;
+  const dispatch = useDispatch();
+
+  // handel delete button function
+  function handleDelete(id) {
+    dispatch({
+      type: "deleted",
+      id: id,
+    });
+  }
+  //content show when we click edit
+  if (isEdit === false) {
+    content = (
+      <>
+        <th>{task.id + 1}</th>
+        <td>{task.text}</td>
+        <td>
+          <input
+            type="checkbox"
+            checked={task.done}
+            className="checkbox checkbox-secondary"
+            onChange={(e) =>
+              dispatch({
+                type: "edited",
+                task: { ...task, done: e.target.checked },
+              })
+            }
+          />
+        </td>
+        <td>
+          <button
+            className="btn btn-outline btn-primary"
+            onClick={() => setIsEdit(true)}
+          >
+            edit
+          </button>
+        </td>
+        <td>
+          <button
+            className="btn btn-outline btn-secondary"
+            onClick={() => handleDelete(task.id)}
+          >
+            delete
+          </button>
+        </td>
+      </>
+    );
+  } else {
+    content = (
+      <>
+        <th></th>
+        <td>
+          <input
+            type="text"
+            className="input input-bordered input-primary w-full max-w-xs"
+            value={task.text}
+            onChange={(e) => {
+              dispatch({
+                type: "edited",
+                task: {
+                  ...task,
+                  text: e.target.value,
+                },
+              });
+            }}
+          />
+        </td>
+        <td></td>
+        <td>
+          <button
+            className="btn btn-outline btn-info"
+            onClick={() => setIsEdit(false)}
+          >
+            save
+          </button>
+        </td>
+        <td></td>
+      </>
+    );
+  }
+  return <tr>{content}</tr>;
 }
+
+Task.propTypes = {
+  task: PropTypes.arrayOf(PropTypes.object),
+};
