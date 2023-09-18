@@ -1,0 +1,2 @@
+this todo app is created by useContext and useReducer  and tailwind and bunch custom hook this app will be able to add new task and edit it and delete the task
+it has toggle button between dark and light theme with daisy ui theme
