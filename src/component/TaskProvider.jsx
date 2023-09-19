@@ -17,7 +17,12 @@ export function TaskProvider({ children }) {
           {/* if we want state and setter both we should define value like object */}
           <setThemeContext.Provider value={{ theme, setTheme }}>
             {/* this div is for dark and light theme  with data-theme prop that its belong to daisy ui*/}
-            <div data-theme={theme} className="pb-10">{children}</div>
+            <div
+              data-theme={theme}
+              className="fixed w-screen h-screen overflow-y-scroll"
+            >
+              {children}
+            </div>
           </setThemeContext.Provider>
         </DispatchContext.Provider>
       </TaskContext.Provider>
