@@ -7,14 +7,16 @@ function AddTAsk() {
   const dispatch = useDispatch();
   //define handle submit function
   function handleSubmit() {
-    dispatch({
-      type: "added",
-      id: nextIndex++,
-      text: text,
-    });
+    if (text) {
+      dispatch({
+        type: "added",
+        id: nextIndex++,
+        text: text,
+      });
+    }
   }
   return (
-    <div className="flex w-full justify-center my-20 ">
+    <div className="flex w-full justify-center my-20 mx-4">
       <input
         type="text"
         placeholder="add new task"
