@@ -1,5 +1,6 @@
 import AddTAsk from "./AddTask";
 import DarkToggle from "./DarkTogghle";
+import Footer from "./Footer";
 import { TaskProvider } from "./TaskProvider";
 import Tasklist from "./Tasklist";
 function TodoApp() {
@@ -8,6 +9,7 @@ function TodoApp() {
       <DarkToggle />
       <AddTAsk />
       <Tasklist />
+      <Footer />
     </TaskProvider>
   );
 }
